@@ -1,0 +1,631 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ profile.name }} - Программистка</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Animate.css -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <style>
+        :root {
+            --primary-color: #6c63ff;
+            --secondary-color: #4d44db;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: #333;
+            overflow-x: hidden;
+        }
+
+        .profile-img {
+            width: 280px;  /* Увеличиваем размер */
+            height: 280px;  /* Делаем квадрат */
+            object-fit: cover;
+            border: 5px solid white;
+            border-radius: 20px;  /* Закругляем углы */
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);  /* Усиливаем тень */
+            transition: all 0.3s ease;
+            transform-style: preserve-3d;  /* Для лучшего 3D эффекта */
+        }
+
+        .profile-img:hover {
+            transform: scale(1.05) rotate(3deg) translateY(-5px);  /* Более плавный эффект */
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
+            border-radius: 15px;  /* Меняем радиус при наведении */
+        }
+
+        .profile-img-container {
+            position: relative;
+            display: inline-block;
+        }
+
+        .profile-img-container::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 20px;
+            background: linear-gradient(135deg, rgba(108, 99, 255, 0.2) 0%, transparent 100%);
+            mix-blend-mode: multiply;
+            transition: all 0.3s ease;
+        }
+
+        .profile-img-container:hover::after {
+            background: linear-gradient(135deg, rgba(108, 99, 255, 0.3) 0%, transparent 100%);
+        }
+
+        .skill-badge {
+            margin: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .skill-badge:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .floating {
+            animation: floating 3s ease-in-out infinite;
+        }
+
+        @keyframes floating {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+            100% { transform: translateY(0px); }
+        }
+
+        .section {
+            padding: 80px 0;
+            position: relative;
+        }
+
+        .section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('{% static "blog/images/dots.png" %}');
+            opacity: 0.05;
+            pointer-events: none;
+        }
+
+        .social-icon {
+            font-size: 24px;
+            margin: 0 10px;
+            color: var(--primary-color);
+            transition: all 0.3s ease;
+        }
+
+        .social-icon:hover {
+            color: var(--secondary-color);
+            transform: scale(1.2);
+        }
+
+        .code-bg {
+            position: absolute;
+            right: -50px;
+            top: 50%;
+            transform: translateY(-50%);
+            opacity: 0.1;
+            z-index: -1;
+            max-width: 400px;
+        }
+
+        .scroll-down {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+            40% {transform: translateY(-30px);}
+            60% {transform: translateY(-15px);}
+        }
+
+        /* Стили для секции проектов */
+        .project-card {
+            transition: all 0.3s ease;
+            border-radius: 10px;
+        }
+
+        .project-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15) !important;
+        }
+
+        .project-img-container {
+            height: 180px;
+            overflow: hidden;
+        }
+
+        .project-img-container img {
+            height: 100%;
+            width: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .project-card:hover .project-img-container img {
+            transform: scale(1.1);
+        }
+
+        .project-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(108, 99, 255, 0.9);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .project-card:hover .project-overlay {
+            opacity: 1;
+        }
+
+        .project-description {
+            text-align: center;
+            transform: translateY(20px);
+            transition: transform 0.3s ease;
+        }
+
+        .project-card:hover .project-description {
+            transform: translateY(0);
+        }
+
+        .project-tech {
+            margin-top: 10px;
+        }
+
+         .console-container {
+            max-width: 600px;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+         }
+
+         .console-body {
+            min-height: 100px;
+            font-size: 1.1rem;
+         }
+
+         .console-cursor {
+            animation: blink 1s infinite;
+         }
+
+         @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+         }
+
+    </style>
+</head>
+<body data-bs-spy="scroll" data-bs-target="#navbar" data-bs-offset="100">
+    <!-- Навигация -->
+    <nav id="navbar" class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand animate__animated animate__fadeInLeft" href="#">
+                <i class="fas fa-code"></i> {{ profile.name }}
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#about">Обо мне</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#skills">Навыки</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#projects">Проекты</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#contact">Контакты</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Герой секция -->
+    <header class="section" style="min-height: 100vh; display: flex; align-items: center;">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6 animate__animated animate__fadeInLeft">
+                    <h1 class="display-3 fw-bold mb-4">Привет, я <span class="text-primary">{{ profile.name }}</span></h1>
+                    <h2 class="text-muted mb-4">{{ profile.title }}</h2>
+                    <p class="lead mb-4">{{ profile.bio|linebreaks }}</p>
+
+                    <!-- Добавьте в hero-секцию -->
+                    <div class="console-container mt-4 animate__animated animate__fadeInLeft animate__delay-1s">
+                      <div class="console-header bg-dark text-white p-2 rounded-top">
+                        <i class="fas fa-circle text-danger me-1"></i>
+                        <i class="fas fa-circle text-warning me-1"></i>
+                        <i class="fas fa-circle text-success me-1"></i>
+                      </div>
+                      <div class="console-body bg-black text-success p-3 rounded-bottom font-monospace">
+                        <span id="console-text"></span>
+                        <span class="console-cursor">|</span>
+                      </div>
+                    </div>
+
+                    <div class="d-flex">
+                        <a href="#about" class="btn btn-primary btn-lg me-3">Узнать больше</a>
+                        <a href="#contact" class="btn btn-outline-primary btn-lg">Связаться</a>
+                    </div>
+                </div>
+                <div class="col-lg-6 text-center animate__animated animate__fadeInRight">
+                    <img src="{{ profile.photo.url }}" alt="{{ profile.name }}" class="profile-img rounded-circle floating">
+                    <img src="{% static 'blog/images/code-bg.png' %}" alt="Code background" class="code-bg d-none d-lg-block">
+                </div>
+            </div>
+        </div>
+        <a href="#about" class="scroll-down">
+            <i class="fas fa-chevron-down text-primary fa-2x"></i>
+        </a>
+    </header>
+
+    <!-- Обо мне -->
+    <section id="about" class="section bg-white">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6">
+                    <h2 class="display-4 fw-bold mb-5 animate__animated animate__fadeInUp">Обо <span class="text-primary">мне</span></h2>
+                    <div class="animate__animated animate__fadeInUp animate__delay-1s">
+                        {{ profile.bio|linebreaks }}
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="card shadow-lg animate__animated animate__fadeInUp animate__delay-2s">
+                        <div class="card-body p-5">
+                            <div class="d-flex align-items-center mb-4">
+                                <div class="bg-primary p-3 rounded-circle me-3">
+                                    <i class="fas fa-graduation-cap text-white fa-2x"></i>
+                                </div>
+                                <div>
+                                    <h4 class="mb-0">Образование</h4>
+                                    <p class="text-muted mb-0">Компьютерные науки</p>
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-center mb-4">
+                                <div class="bg-primary p-3 rounded-circle me-3">
+                                    <i class="fas fa-briefcase text-white fa-2x"></i>
+                                </div>
+                                <div>
+                                    <h4 class="mb-0">Опыт</h4>
+                                    <p class="text-muted mb-0">5+ лет в разработке</p>
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-center">
+                                <div class="bg-primary p-3 rounded-circle me-3">
+                                    <i class="fas fa-heart text-white fa-2x"></i>
+                                </div>
+                                <div>
+                                    <h4 class="mb-0">Интересы</h4>
+                                    <p class="text-muted mb-0">AI, Веб-разработка, Open Source</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Навыки -->
+    <section id="skills" class="section">
+        <div class="container">
+            <h2 class="display-4 fw-bold text-center mb-5 animate__animated animate__fadeInUp">Мои <span class="text-primary">навыки</span></h2>
+            <div class="row justify-content-center">
+                {% for skill in profile.skills.split %}
+                    <div class="col-auto mb-3">
+                        <span class="badge bg-primary skill-badge animate__animated animate__fadeInUp" style="animation-delay: {{ forloop.counter|divisibleby:2|yesno:'0.2s,0.4s' }};">
+                            <i class="fas fa-check-circle me-2"></i>{{ skill }}
+                        </span>
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="row mt-5">
+                <div class="col-md-4 mb-4 animate__animated animate__fadeInLeft">
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-body text-center p-4">
+                            <div class="bg-primary bg-opacity-10 p-3 rounded-circle d-inline-block mb-3">
+                                <i class="fas fa-laptop-code text-primary fa-3x"></i>
+                            </div>
+                            <h4>Веб-разработка</h4>
+                            <p class="text-muted">Создание современных веб-приложений с использованием современных технологий.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4 animate__animated animate__fadeInUp">
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-body text-center p-4">
+                            <div class="bg-primary bg-opacity-10 p-3 rounded-circle d-inline-block mb-3">
+                                <i class="fas fa-robot text-primary fa-3x"></i>
+                            </div>
+                            <h4>Искусственный интеллект</h4>
+                            <p class="text-muted">Разработка и обучение моделей машинного обучения для решения бизнес-задач.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4 animate__animated animate__fadeInRight">
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-body text-center p-4">
+                            <div class="bg-primary bg-opacity-10 p-3 rounded-circle d-inline-block mb-3">
+                                <i class="fas fa-server text-primary fa-3x"></i>
+                            </div>
+                            <h4>DevOps</h4>
+                            <p class="text-muted">Настройка CI/CD, Docker, Kubernetes и облачных решений для ваших проектов.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+        <!-- Мои проекты -->
+    <section id="projects" class="section">
+        <div class="container">
+            <h2 class="display-4 fw-bold text-center mb-5 animate__animated animate__fadeInUp">Мои <span class="text-primary">проекты</span></h2>
+            <div class="row g-4">
+                <!-- Проект 1 -->
+                <div class="col-md-6 col-lg-3 animate__animated animate__fadeInUp" data-wow-delay="0.1s">
+                    <div class="project-card card h-100 border-0 shadow-lg overflow-hidden">
+                        <div class="project-img-container position-relative overflow-hidden">
+                            <img src="{% static 'blog/images/project1.jpg' %}" class="card-img-top" alt="Проект 1">
+                            <div class="project-overlay">
+                                <div class="project-description p-3">
+                                    <p>Веб-приложение для автоматизации бизнес-процессов с использованием Django и React</p>
+                                    <div class="project-tech">
+                                        <span class="badge bg-light text-dark me-1">Python</span>
+                                        <span class="badge bg-light text-dark me-1">Django</span>
+                                        <span class="badge bg-light text-dark">React</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">Бизнес-автоматизация</h5>
+                            <a href="https://github.com/yourusername/project1" target="_blank" class="btn btn-sm btn-outline-primary mt-2">
+                                <i class="fab fa-github me-1"></i> Исходный код
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Проект 2 -->
+                <div class="col-md-6 col-lg-3 animate__animated animate__fadeInUp" data-wow-delay="0.2s">
+                    <div class="project-card card h-100 border-0 shadow-lg overflow-hidden">
+                        <div class="project-img-container position-relative overflow-hidden">
+                            <img src="{% static 'blog/images/project2.jpg' %}" class="card-img-top" alt="Проект 2">
+                            <div class="project-overlay">
+                                <div class="project-description p-3">
+                                    <p>Мобильное приложение для изучения программирования с интерактивными заданиями</p>
+                                    <div class="project-tech">
+                                        <span class="badge bg-light text-dark me-1">Flutter</span>
+                                        <span class="badge bg-light text-dark me-1">Dart</span>
+                                        <span class="badge bg-light text-dark">Firebase</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">LearnToCode App</h5>
+                            <a href="https://github.com/yourusername/project2" target="_blank" class="btn btn-sm btn-outline-primary mt-2">
+                                <i class="fab fa-github me-1"></i> Исходный код
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Проект 3 -->
+                <div class="col-md-6 col-lg-3 animate__animated animate__fadeInUp" data-wow-delay="0.3s">
+                    <div class="project-card card h-100 border-0 shadow-lg overflow-hidden">
+                        <div class="project-img-container position-relative overflow-hidden">
+                            <img src="{% static 'blog/images/project3.jpg' %}" class="card-img-top" alt="Проект 3">
+                            <div class="project-overlay">
+                                <div class="project-description p-3">
+                                    <p>Система рекомендаций фильмов на основе машинного обучения и анализа предпочтений</p>
+                                    <div class="project-tech">
+                                        <span class="badge bg-light text-dark me-1">Python</span>
+                                        <span class="badge bg-light text-dark me-1">TensorFlow</span>
+                                        <span class="badge bg-light text-dark">Flask</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">MovieRecommender</h5>
+                            <a href="https://github.com/yourusername/project3" target="_blank" class="btn btn-sm btn-outline-primary mt-2">
+                                <i class="fab fa-github me-1"></i> Исходный код
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Проект 4 -->
+                <div class="col-md-6 col-lg-3 animate__animated animate__fadeInUp" data-wow-delay="0.4s">
+                    <div class="project-card card h-100 border-0 shadow-lg overflow-hidden">
+                        <div class="project-img-container position-relative overflow-hidden">
+                            <img src="{% static 'blog/images/project4.jpg' %}" class="card-img-top" alt="Проект 4">
+                            <div class="project-overlay">
+                                <div class="project-description p-3">
+                                    <p>Инструмент для визуализации алгоритмов сортировки с пошаговой анимацией</p>
+                                    <div class="project-tech">
+                                        <span class="badge bg-light text-dark me-1">JavaScript</span>
+                                        <span class="badge bg-light text-dark me-1">D3.js</span>
+                                        <span class="badge bg-light text-dark">HTML5</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">SortVisualizer</h5>
+                            <a href="https://github.com/yourusername/project4" target="_blank" class="btn btn-sm btn-outline-primary mt-2">
+                                <i class="fab fa-github me-1"></i> Исходный код
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Контакты -->
+    <section id="contact" class="section bg-white">
+        <div class="container">
+            <h2 class="display-4 fw-bold text-center mb-5 animate__animated animate__fadeInUp">Свяжитесь <span class="text-primary">со мной</span></h2>
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="card shadow-lg animate__animated animate__fadeInUp">
+                        <div class="card-body p-5">
+                            <div class="text-center mb-5">
+                                <h3 class="mb-3">Давайте работать вместе!</h3>
+                                <p class="text-muted">Я всегда открыта для новых возможностей и сотрудничества.</p>
+                                <div class="mt-4">
+                                    {% if profile.github_url %}
+                                        <a href="{{ profile.github_url }}" class="social-icon" target="_blank"><i class="fab fa-github"></i></a>
+                                    {% endif %}
+                                    {% if profile.linkedin_url %}
+                                        <a href="{{ profile.linkedin_url }}" class="social-icon" target="_blank"><i class="fab fa-linkedin"></i></a>
+                                    {% endif %}
+                                    <a href="mailto:your.email@example.com" class="social-icon"><i class="fas fa-envelope"></i></a>
+                                    <a href="tel:+1234567890" class="social-icon"><i class="fas fa-phone"></i></a>
+                                </div>
+                            </div>
+                            <form>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <input type="text" class="form-control" placeholder="Ваше имя">
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <input type="email" class="form-control" placeholder="Ваш email">
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <input type="text" class="form-control" placeholder="Тема">
+                                </div>
+                                <div class="mb-3">
+                                    <textarea class="form-control" rows="5" placeholder="Ваше сообщение"></textarea>
+                                </div>
+                                <button type="submit" class="btn btn-primary btn-lg w-100">Отправить сообщение</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Футер -->
+    <footer class="bg-dark text-white py-5">
+        <div class="container text-center">
+            <h3 class="mb-4"><i class="fas fa-code"></i> {{ profile.name }}</h3>
+            <p class="text-muted mb-4">Программистка, создающая цифровые решения для реального мира</p>
+            <div class="mb-4">
+                {% if profile.github_url %}
+                    <a href="{{ profile.github_url }}" class="social-icon text-white" target="_blank"><i class="fab fa-github"></i></a>
+                {% endif %}
+                {% if profile.linkedin_url %}
+                    <a href="{{ profile.linkedin_url }}" class="social-icon text-white" target="_blank"><i class="fab fa-linkedin"></i></a>
+                {% endif %}
+            </div>
+            <p class="text-muted mb-0">&copy; {% now "Y" %} {{ profile.name }}. Все права защищены.</p>
+        </div>
+    </footer>
+
+    <!-- Скрипты -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script>
+        // Анимация при скролле
+        $(window).scroll(function() {
+            $('.animate__animated').each(function() {
+                var position = $(this).offset().top;
+                var scroll = $(window).scrollTop();
+                var windowHeight = $(window).height();
+
+                if (scroll + windowHeight > position) {
+                    var animation = $(this).attr('class').split('animate__animated ')[1].split(' ')[0];
+                    $(this).addClass('animate__' + animation);
+                }
+            });
+        });
+
+        // Плавный скролл
+        $('a[href*="#"]').on('click', function(e) {
+            e.preventDefault();
+            $('html, body').animate(
+                {
+                    scrollTop: $($(this).attr('href')).offset().top - 70,
+                },
+                500,
+                'linear'
+            );
+        });
+
+        // Параллакс эффект
+        $(window).scroll(function() {
+            var scrollPosition = $(this).scrollTop();
+            $('.code-bg').css('transform', 'translateY(-50%) translateX(' + scrollPosition / 10 + 'px)');
+        });
+
+              // JS для анимации печатающегося текста
+      const phrases = [
+        "> Добро пожаловать на мой сайт!",
+        "> Я профессиональный разработчик",
+        "> Специализация: {{ profile.skills.split|join:', ' }}",
+        "> Свяжитесь со мной для сотрудничества!"
+      ];
+      let currentPhrase = 0;
+      let currentChar = 0;
+      let isDeleting = false;
+
+      function typeWriter() {
+        const element = document.getElementById("console-text");
+        const cursor = document.querySelector(".console-cursor");
+
+        cursor.style.opacity = cursor.style.opacity == '0' ? '1' : '0';
+
+        if (!isDeleting && currentChar < phrases[currentPhrase].length) {
+          element.textContent += phrases[currentPhrase].charAt(currentChar);
+          currentChar++;
+          setTimeout(typeWriter, 100);
+        } else if (isDeleting && currentChar > 0) {
+          element.textContent = phrases[currentPhrase].substring(0, currentChar-1);
+          currentChar--;
+          setTimeout(typeWriter, 50);
+        } else {
+          isDeleting = !isDeleting;
+          if (!isDeleting) currentPhrase = (currentPhrase + 1) % phrases.length;
+          setTimeout(typeWriter, isDeleting ? 1500 : 500);
+        }
+      }
+
+      document.addEventListener("DOMContentLoaded", function() {
+        setTimeout(typeWriter, 1000);
+      });
+    </script>
+</body>
+</html>
