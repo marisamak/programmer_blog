@@ -575,7 +575,7 @@
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-lg-6 animate__animated animate__fadeInLeft">
-                    <h1 class="display-3 fw-bold mb-4">Привет, я <span class="text-primary">{{ profile.name }}</span></h1>
+                    <h1 class="display-3 fw-bold mb-4">Привет, я <span class="text-primary">Самакова Марина</span></h1>
                     <h2 class="text-muted mb-4">{{ profile.title }}</h2>
                     <p class="lead mb-4">{{ profile.bio|linebreaks }}</p>
 
@@ -585,7 +585,7 @@
                     </div>
                 </div>
                 <div class="col-lg-6 text-center animate__animated animate__fadeInRight">
-                    <img src="{{ profile.photo.url }}" alt="{{ profile.name }}" class="profile-img rounded-circle floating">
+                    <img src="{{ profile.photo.url }}" alt="Мое фото" class="profile-img rounded-circle floating">
                 </div>
             </div>
         </div>
@@ -799,8 +799,8 @@
         </div>
     </section>
 
-    <!-- Секция контактов -->
-    <section id="contact" class="section bg-white py-5">
+    <!-- Контакты -->
+    <section id="contact" class="section bg-white">
         <div class="container">
             <h2 class="display-4 fw-bold text-center mb-5 animate__animated animate__fadeInUp">Свяжитесь <span class="text-primary">со мной</span></h2>
             <div class="row justify-content-center">
@@ -823,22 +823,20 @@
                             </div>
                             <form>
                                 <div class="row">
-                                    <div class="col-md-6 mb-3 form-animate" style="transition-delay: 0.1s">
+                                    <div class="col-md-6 mb-3">
                                         <input type="text" class="form-control" placeholder="Ваше имя">
                                     </div>
-                                    <div class="col-md-6 mb-3 form-animate" style="transition-delay: 0.2s">
+                                    <div class="col-md-6 mb-3">
                                         <input type="email" class="form-control" placeholder="Ваш email">
                                     </div>
                                 </div>
-                                <div class="mb-3 form-animate" style="transition-delay: 0.3s">
+                                <div class="mb-3">
                                     <input type="text" class="form-control" placeholder="Тема">
                                 </div>
-                                <div class="mb-3 form-animate" style="transition-delay: 0.4s">
+                                <div class="mb-3">
                                     <textarea class="form-control" rows="5" placeholder="Ваше сообщение"></textarea>
                                 </div>
-                                <div class="form-animate" style="transition-delay: 0.5s">
-                                    <button type="submit" class="btn btn-primary btn-lg w-100">Отправить сообщение</button>
-                                </div>
+                                <button type="submit" class="btn btn-primary btn-lg w-100">Отправить сообщение</button>
                             </form>
                         </div>
                     </div>
@@ -860,7 +858,7 @@
                     <a href="{{ profile.linkedin_url }}" class="social-icon text-white" target="_blank"><i class="fab fa-linkedin"></i></a>
                 {% endif %}
             </div>
-            <p class="text-muted mb-0">&copy; {% now "Y" %} {{ profile.name }}. Все права защищены.</p>
+            <p class="text-muted mb-0">&copy;Самакова Марина. Все права защищены.</p>
         </div>
     </footer>
 
